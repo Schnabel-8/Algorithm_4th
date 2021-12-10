@@ -9,6 +9,6 @@ set(SOURCES
 add_executable(sort ${SOURCES})
 
 target_include_directories(sort
-      PRIVATE
+      PUBLIC
             ${PROJECT_SOURCE_DIR}/include
 )
