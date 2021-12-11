@@ -19,17 +19,51 @@ template<typename Key,typename Value>
 class BST {
     typedef Node<Key,Value> Node;
     typedef std::stack<Node*> stack;
+    static Value null_value;
 public:
     ~BST() {};
-    Node& put(Key key, Value value);
-
+    Node& put(const Key& key,const Value& value);
+    Value& get(Key key)const;
+    //void show_pre();//show the tree in pre order
+    void test() {
+        Node* tmp = head;
+        //cout << tmp->key << " ";
+        while (tmp) {
+            cout << tmp->key << " ";
+            tmp = tmp->right;
+        }
+        cout << endl;
+    }
 private:
     Node* head = nullptr;
     int size = 0;
 };
 
 template<typename Key, typename Value>
-Node<Key,Value>& BST<Key,Value>::put(Key key, Value value) {
+Value& BST<Key, Value>::get(Key key) const{
+    Node* ptr = head;
+    while (ptr) {
+        if (key == ptr->key)
+            return ptr->value;
+        else if (key < ptr->key) {
+            if (ptr->left)
+                ptr = ptr->left;
+            else 
+                break;
+        }
+        else {
+            if (ptr->right)
+                ptr = ptr->right;
+            else
+                break;
+        }
+    }
+    cout << "not found!" << endl;
+    return null_value;
+}
+
+template<typename Key, typename Value>
+Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
     Node* ptr = new Node(key, value);
     assert(ptr);
     int k = 0;
@@ -52,7 +86,6 @@ Node<Key,Value>& BST<Key,Value>::put(Key key, Value value) {
         ptr->key > tmp->key ? tmp->right = ptr : tmp->left = ptr;
         while (!stk.empty()) {
             k++;
-            Node* a;
             stk.top()->count+=k;
             stk.pop();
         }
@@ -61,3 +94,7 @@ Node<Key,Value>& BST<Key,Value>::put(Key key, Value value) {
     ptr->count++;
     return *ptr;
 }
+
+//initialize the static variable null_value
+template<typename Key, typename Value>
+Value BST<Key, Value>::null_value = Value();
