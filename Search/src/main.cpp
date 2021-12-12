@@ -10,13 +10,17 @@ typedef BST<int, int> BST_int;
 int main() {
 	{
 	BST_int s;
+	s.put(11,11);
 	for (int k = 0; k < 10; ++k)
 		s.put(k, k);
-	s.test();
-	for (int k = 0; k < 10; ++k)
+	for (int k = 12; k < 20; ++k)
+		s.put(k, k);
+	//s.test();
+	s.deleteMin();
+	for (int k = 0; k < 20; ++k)
 		cout << s.get(k) << " ";
 	cout << endl;
-	cout << s.floor(5).key;
+	cout << s.rank(s.select(5).key);
 	}
 	_CrtDumpMemoryLeaks();
 	return 0;

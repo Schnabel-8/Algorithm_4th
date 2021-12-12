@@ -50,8 +50,12 @@ public:
         return *tmp;
     };
 
-    Node& floor(Key key) const{
-        Node* tmp = head;
+    Node& floor(Key key)const {
+        return floor(head, key);
+    }
+
+    Node& floor(Node* ptr,Key key) const{
+        Node* tmp = ptr;
         while (tmp) {
             if (tmp->key == key)
                 return *tmp;
@@ -70,12 +74,18 @@ public:
          }
         if (tmp)
             return *tmp;
-        else
+        else {
+            cout << "Error!" << endl;
             return null_node;
+        }
     }
 
     Node& ceil(Key key) const {
-        Node* tmp = head;
+        return ceil(head, key);
+    }
+
+    Node& ceil(Node* ptr,Key key) const {
+        Node* tmp = ptr;
         while (tmp) {
             if (tmp->key == key)
                 return *tmp;
@@ -98,14 +108,85 @@ public:
             return null_node;
     }
 
+    inline int count(Node* ptr) const {
+        return ptr ? ptr->count : 0;
+    }
+
+    Node& select(int k) const {
+        return select(head, k);
+    }
+
+    Node& select(Node* ptr,int k) const {
+        Node* tmp = ptr;
+        while (tmp) {
+            if (count(tmp) == k)
+                return *tmp;
+            else if (count(tmp->left) > k) 
+                tmp = tmp->left;
+            else if (count(tmp->right) >= k - count(tmp->left) - 1) 
+                tmp = tmp->right;
+            else
+                break;
+        }
+        cout << "Error!" << endl;
+        return null_node;
+    }
+
+    int rank(Key k) {
+        return rank(head, k);
+    }
+
+    int rank(Node* ptr,Key k) {
+        Node* tmp = ptr;
+        int rank = 0;
+        while (tmp) {
+            if (tmp->key == k)
+                return count(tmp);
+            else if (tmp->key > k)
+                tmp = tmp->left;
+            else if (tmp->key < k) {
+                tmp = tmp->right;
+                    rank += 1 + count(tmp->left);
+            }
+            else
+                break;
+        }
+        cout << "Error!" << endl;
+        return 0;
+    }
+
     void test() {
         Node* tmp = head;
         //cout << tmp->key << " ";
+
         while (tmp) {
-            cout << tmp->key << " ";
+            cout << tmp->key <<" count: "<<count(tmp)<< " ";
             tmp = tmp->right;
         }
         cout << endl;
+    }
+
+    void deleteMin() {
+        if (head) {
+            Node* tmp = head;
+            if (!tmp->left) {
+                tmp = tmp->right;
+                delete head;
+                head = tmp;
+            }
+            else {
+                tmp->count--;
+                while (tmp->left->left) {
+                    tmp = tmp->left;
+                    tmp->count--;
+                }
+                Node* tmp2;
+                tmp2 = tmp->left->right;
+                delete tmp->left;
+                tmp->left = tmp2;
+            }
+            size--;
+        }
     }
 private:
     Node* head = nullptr;
@@ -131,7 +212,7 @@ Value& BST<Key, Value>::get(Key key) const{
                 break;
         }
     }
-    cout << "not found!" << endl;
+    cout << "not found!" ;
     return null_value;
 }
 
@@ -139,7 +220,6 @@ template<typename Key, typename Value>
 Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
     Node* ptr = new Node(key, value);
     assert(ptr);
-    int k = 0;
     stack stk;
     if (!size) {
         head = ptr;
@@ -148,12 +228,12 @@ Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
         Node* tmp = head;
         stk.push(tmp);
         while (tmp->count > 1) {
-            if (tmp->left)
-                if (ptr->key < tmp->key)
-                    tmp = tmp->left;
-            if (tmp->right)
-                if (ptr->key > tmp->key)
-                    tmp = tmp->right;
+            if (tmp->left && ptr->key < tmp->key)
+                tmp = tmp->left;
+            else if (tmp->right && ptr->key > tmp->key)
+                tmp = tmp->right;
+            else
+                break;
             stk.push(tmp);
             //if the new node have the same key with an existed
             //node , then the value of latter would be updated
@@ -165,8 +245,7 @@ Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
         if(tmp->key!=key)
         ptr->key > tmp->key ? tmp->right = ptr : tmp->left = ptr;
         while (!stk.empty()) {
-            k++;
-            stk.top()->count+=k;
+            stk.top()->count++;
             stk.pop();
         }
     }
