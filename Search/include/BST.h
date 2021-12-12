@@ -7,7 +7,7 @@
 template<typename Key,typename Value>
 struct Node {
     Node(Key a, Value b) :key(a), value(b) {};
-
+    Node() :key(Key()),value(Value()) {};
     //we return Node& in BST::function , so in order to prevent 
     //destroying the tree , we use const Key here
     const Key key;
@@ -22,6 +22,7 @@ class BST {
     typedef Node<Key,Value> Node;
     typedef std::stack<Node*> stack;
     static Value null_value;
+    static Node null_node;
 public:
     ~BST() {};
     Node& put(const Key& key,const Value& value);
@@ -49,7 +50,53 @@ public:
         return *tmp;
     };
 
-    //Node& floor()
+    Node& floor(Key key) const{
+        Node* tmp = head;
+        while (tmp) {
+            if (tmp->key == key)
+                return *tmp;
+            else if (tmp->key<key) {
+                if (tmp->right)
+                    tmp = tmp->right;
+                else
+                    break;
+            }
+            else if (tmp->key>key) {
+                if (tmp->left)
+                    tmp = tmp->left;
+                else
+                    break;
+            }
+         }
+        if (tmp)
+            return *tmp;
+        else
+            return null_node;
+    }
+
+    Node& ceil(Key key) const {
+        Node* tmp = head;
+        while (tmp) {
+            if (tmp->key == key)
+                return *tmp;
+            else if (tmp->key > key) {
+                if (tmp->left)
+                    tmp = tmp->left;
+                else
+                    break;
+            }
+            else if (tmp->key > key) {
+                if (tmp->right)
+                    tmp = tmp->right;
+                else
+                    break;
+            }
+        }
+        if (tmp)
+            return *tmp;
+        else
+            return null_node;
+    }
 
     void test() {
         Node* tmp = head;
@@ -128,6 +175,9 @@ Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
     return *ptr;
 }
 
-//initialize the static variable null_value
+//initialize the static variable null_value and null_node
 template<typename Key, typename Value>
 Value BST<Key, Value>::null_value = Value();
+
+template<typename Key, typename Value>
+Node<Key,Value> BST<Key, Value>::null_node = Node();

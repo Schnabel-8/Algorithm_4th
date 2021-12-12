@@ -16,6 +16,7 @@ int main() {
 	for (int k = 0; k < 10; ++k)
 		cout << s.get(k) << " ";
 	cout << endl;
+	cout << s.floor(5).key;
 	}
 	_CrtDumpMemoryLeaks();
 	return 0;
