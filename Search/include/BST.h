@@ -8,7 +8,9 @@ template<typename Key,typename Value>
 struct Node {
     Node(Key a, Value b) :key(a), value(b) {};
 
-    Key key;
+    //we return Node& in BST::function , so in order to prevent 
+    //destroying the tree , we use const Key here
+    const Key key;
     Value value;
     int count = 0;
     Node* left = nullptr;
@@ -25,6 +27,30 @@ public:
     Node& put(const Key& key,const Value& value);
     Value& get(Key key)const;
     //void show_pre();//show the tree in pre order
+    Node& max()const {
+        if (!size) {
+            cout << "Empty!" << endl;
+            return null_value;
+        }
+        Node* tmp = head;
+        while (tmp->left)
+            tmp = tmp->left;
+        return *tmp;
+    };
+
+    Node& min()const {
+        if (!size) {
+            cout << "Empty!" << endl;
+            return null_value;
+        }
+        Node* tmp = head;
+        while (tmp->right)
+            tmp = tmp->right;
+        return *tmp;
+    };
+
+    //Node& floor()
+
     void test() {
         Node* tmp = head;
         //cout << tmp->key << " ";
