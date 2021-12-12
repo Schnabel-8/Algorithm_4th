@@ -82,7 +82,14 @@ Node<Key,Value>& BST<Key,Value>::put(const Key& key,const Value& value) {
                 if (ptr->key > tmp->key)
                     tmp = tmp->right;
             stk.push(tmp);
+            //if the new node have the same key with an existed
+            //node , then the value of latter would be updated
+            if (tmp->key == key) {
+                tmp->value = value;
+                break;
+            }
         }
+        if(tmp->key!=key)
         ptr->key > tmp->key ? tmp->right = ptr : tmp->left = ptr;
         while (!stk.empty()) {
             k++;
