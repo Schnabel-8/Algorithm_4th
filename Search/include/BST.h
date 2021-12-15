@@ -10,6 +10,11 @@ struct Node {
     Node() :key(Key()),value(Value()) {};
     //we return Node& in BST::function , so in order to prevent 
     //destroying the tree , we use const Key here
+
+    //IMPORTANT!!!
+    //accroding to Effective C++ , it's not always wise to return
+    //a reference , our user may change the public members of Node,
+    //so it's a failed attempt
     const Key key;
     Value value;
     int count = 0;
