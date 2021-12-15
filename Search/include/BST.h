@@ -32,6 +32,7 @@ public:
     ~BST() {};
     Node& put(const Key& key,const Value& value);
     Value& get(Key key)const;
+    void Delete(Key key);
     //void show_pre();//show the tree in pre order
     Node& max()const {
         if (!size) {
@@ -66,7 +67,10 @@ public:
                 return *tmp;
             else if (tmp->key<key) {
                 if (tmp->right)
-                    tmp = tmp->right;
+                    if (tmp->right->key < key)
+                        tmp = tmp->right;
+                    else
+                        break;
                 else
                     break;
             }
@@ -78,11 +82,10 @@ public:
             }
          }
         if (tmp)
+            if(tmp->key <= key)
             return *tmp;
-        else {
-            cout << "Error!" << endl;
-            return null_node;
-        }
+        cout << "floor not found!" << endl;
+        return null_node;
     }
 
     Node& ceil(Key key) const {
@@ -96,11 +99,14 @@ public:
                 return *tmp;
             else if (tmp->key > key) {
                 if (tmp->left)
-                    tmp = tmp->left;
+                    if (tmp->left->key > key)
+                        tmp = tmp->left;
+                    else
+                        break;
                 else
                     break;
             }
-            else if (tmp->key > key) {
+            else if (tmp->key < key) {
                 if (tmp->right)
                     tmp = tmp->right;
                 else
@@ -108,9 +114,10 @@ public:
             }
         }
         if (tmp)
+            if(tmp->key >= key)
             return *tmp;
-        else
-            return null_node;
+        cout << "ceil not found!";
+        return null_node;
     }
 
     inline int count(Node* ptr) const {
@@ -197,6 +204,22 @@ private:
     Node* head = nullptr;
     int size = 0;
 };
+
+template<typename Key, typename Value>
+void BST<Key, Value>::Delete(Key key) {
+    if (size == 0)
+        cout << "not found!";
+    else if (size == 1) {
+        delete head;
+        head = nullptr;
+    }
+    else {
+        Node* ptr = head;
+        do{
+            
+        } while (ptr);
+    }
+}
 
 template<typename Key, typename Value>
 Value& BST<Key, Value>::get(Key key) const{

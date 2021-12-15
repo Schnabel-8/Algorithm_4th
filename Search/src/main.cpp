@@ -20,7 +20,9 @@ int main() {
 	for (int k = 0; k < 20; ++k)
 		cout << s.get(k) << " ";
 	cout << endl;
-	cout << s.rank(s.select(5).key);
+	//cout << s.rank(s.select(5).key);
+	cout << s.floor(10).key<<endl;
+	cout << s.ceil(10).key;
 	}
 	_CrtDumpMemoryLeaks();
 	return 0;
